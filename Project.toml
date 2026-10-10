@@ -1,0 +1,10 @@
+name = "Safetensors"
+uuid = "7dd958b9-1337-43ca-979d-23f6ee89e4d7"
+version = "0.1.0"
+authors = ["Kurosawa Mutsumi <248625291+krswm@users.noreply.github.com>"]
+
+[deps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+
+[compat]
+JSON = "1.10.0"
