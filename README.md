@@ -5,4 +5,6 @@ I'm going to make my own Safetensors loading library for Julia.
 - `__metadata__`
 - Listing all tensor names
 
+↑ Maybe later...
+
 I need to know how to unit test in Julia...
