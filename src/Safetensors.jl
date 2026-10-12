@@ -1,5 +1,9 @@
 module Safetensors
 
-export get_tensor, read_safetensors
+export foo
+
+function foo(x)
+    x
+end
 
 end
