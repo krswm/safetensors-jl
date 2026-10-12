@@ -3,12 +3,10 @@ using Test
 using Safetensors
 
 @testset begin
-    a = 3
-    @test true
-    @test 2 == 2
-    @test a == 3
-
-    open("tensors.safetensors") do file
-        read(file, UInt64) |> println
-    end
+    safetensors = read_safetensors("tensors.safetensors")
+    expected = reshape(convert(Vector{Float32}, 0:23), 4, 3, 2)
+    tensor = get_permuted_tensor!(safetensors, "tensor")
+    @test tensor == expected
+    tensor = get_permuted_tensor!(safetensors, "tensor")
+    @test tensor == expected
 end
