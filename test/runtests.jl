@@ -3,8 +3,7 @@ using Test
 using Safetensors
 
 @testset begin
-    metadata, tensors = get_permuted_tensors("tensors.safetensors")
-    @test metadata == Dict("metadata_key" => "metadata_value")
+    tensors, metadata = get_permuted_tensors("tensors.safetensors")
     @test tensors == Dict(
         "f16_tensor" => reshape(convert(Vector{Float16}, 0:23), 4, 3, 2),
         "f32_tensor" => reshape(convert(Vector{Float32}, 0:23), 4, 3, 2),
@@ -18,4 +17,5 @@ using Safetensors
         "i64_tensor" => reshape(convert(Vector{Int64}, 0:23), 4, 3, 2),
         "u64_tensor" => reshape(convert(Vector{UInt64}, 0:23), 4, 3, 2),
     )
+    @test metadata == Dict("metadata_key" => "metadata_value")
 end
