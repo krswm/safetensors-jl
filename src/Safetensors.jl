@@ -1,6 +1,10 @@
-# Specification of the Safetensors format:
-# https://github.com/safetensors/safetensors#format
+"""
+    Safetensors
 
+A library to read [Safetensors](https://github.com/safetensors/safetensors) files.
+
+I referred to [the Safetensors format specification](https://github.com/safetensors/safetensors#format) to write it.
+"""
 module Safetensors
 
 export get_permuted_tensors
@@ -21,6 +25,28 @@ dtype_table = Dict(
     "U64" => UInt64,
 )
 
+"""
+    get_permuted_tensors(path)
+
+Get tensors from the Safetensors file at `path`.
+
+Return `tensors, metadata` where:
+
+- `tensors` is a `Dict{String,Array}` mapping tensor names to tensors.
+- `metadata` is a `Dict{String,String}`.
+
+The returned tensors are permuted.
+That is, if the Safetensors file has a tensor:
+
+    0 1 2
+    3 4 5
+
+you will get a tensor:
+
+    0 3
+    1 4
+    2 5
+"""
 function get_permuted_tensors(path)
     open(path) do file
         header = begin
