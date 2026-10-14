@@ -1,9 +1,7 @@
 """
     Safetensors
 
-A library to read [Safetensors](https://github.com/safetensors/safetensors) files.
-
-I referred to [the Safetensors format specification](https://github.com/safetensors/safetensors#format) to write it.
+This library reads tensors from a [Safetensors](https://github.com/safetensors/safetensors) file.
 """
 module Safetensors
 
