@@ -61,22 +61,34 @@ function get_permuted_tensors(path)
             if key == "__metadata__"
                 metadata = convert(Dict{String,String}, value)
             else
+                begin_offset, end_offset = value.data_offsets
+                buffer = IOBuffer(byte_buffer[(begin_offset+1):end_offset])
+
                 if haskey(dtype_table, value.dtype)
                     T = dtype_table[value.dtype]
-                    begin_offset, end_offset = value.data_offsets
-                    buffer = IOBuffer(byte_buffer[(begin_offset+1):end_offset])
-                    colmaj = [read(buffer, T) for _ = 1:prod(value.shape)]
-                    tensors[key] = reshape(colmaj, Tuple(reverse(value.shape)))
-                elseif value.dtype == "BF16"
-                    begin_offset, end_offset = value.data_offsets
-                    buffer = IOBuffer(byte_buffer[(begin_offset+1):end_offset])
+                    values = [ltoh(read(buffer, T)) for _ = 1:prod(value.shape)]
 
+                    tensors[key] = reshape(values, Tuple(reverse(value.shape)))
+                elseif value.dtype == "BF16"
+                    # The bit-layout of bfloat16: saaa_aaaa_afff_ffff
+                    # The bit-layout of float32:  saaa_aaaa_afff_ffff_ffff_ffff_ffff_ffff
+
+                    # When you append sixteen zero bits
+                    # at the end of the bit-layout of your bfloat16 number
+                    # and interpret it as a bit-layout of a float32 number,
+                    # you will get the identical numerical value.
+
+                    # Get the bit-layout of bfloat16 numbers in the file
+                    # interpreting them as uint16.
                     values = [ltoh(read(buffer, UInt16)) for _ = 1:prod(value.shape)]
 
+                    # Convert them into uint32 to make a room for bit shifting.
                     values = convert(Vector{UInt32}, values)
 
+                    # Append sixteen zero bits.
                     values = values .<< 16
 
+                    # Interpret the numbers as float32.
                     values = reinterpret.(Float32, values)
 
                     tensors[key] = reshape(values, Tuple(reverse(value.shape)))
