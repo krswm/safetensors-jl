@@ -67,6 +67,19 @@ function get_permuted_tensors(path)
                     buffer = IOBuffer(byte_buffer[(begin_offset+1):end_offset])
                     colmaj = [read(buffer, T) for _ = 1:prod(value.shape)]
                     tensors[key] = reshape(colmaj, Tuple(reverse(value.shape)))
+                elseif value.dtype == "BF16"
+                    begin_offset, end_offset = value.data_offsets
+                    buffer = IOBuffer(byte_buffer[(begin_offset+1):end_offset])
+
+                    values = [ltoh(read(buffer, UInt16)) for _ = 1:prod(value.shape)]
+
+                    values = convert(Vector{UInt32}, values)
+
+                    values = values .<< 16
+
+                    values = reinterpret.(Float32, values)
+
+                    tensors[key] = reshape(values, Tuple(reverse(value.shape)))
                 end
             end
         end
