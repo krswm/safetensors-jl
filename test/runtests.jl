@@ -8,6 +8,7 @@ using Safetensors
         "f16_tensor" => reshape(convert(Vector{Float16}, 0:23), 4, 3, 2),
         "f32_tensor" => reshape(convert(Vector{Float32}, 0:23), 4, 3, 2),
         "f64_tensor" => reshape(convert(Vector{Float64}, 0:23), 4, 3, 2),
+        "bf16_tensor" => reshape(convert(Vector{Float32}, 0:23), 4, 3, 2),
         "i8_tensor" => reshape(convert(Vector{Int8}, 0:23), 4, 3, 2),
         "u8_tensor" => reshape(convert(Vector{UInt8}, 0:23), 4, 3, 2),
         "i16_tensor" => reshape(convert(Vector{Int16}, 0:23), 4, 3, 2),
